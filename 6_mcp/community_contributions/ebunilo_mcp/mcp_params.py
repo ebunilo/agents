@@ -1,8 +1,20 @@
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
+
 from market import is_paid_polygon, is_realtime_polygon
 
 load_dotenv(override=True)
+
+_ROOT = Path(__file__).resolve().parent
+
+
+def _libsql_memory_url(trader_name: str) -> str:
+    """Absolute file:// URL so mcp-memory-libsql works regardless of process cwd."""
+    mem = _ROOT / "memory"
+    mem.mkdir(parents=True, exist_ok=True)
+    return (mem / f"{trader_name}.db").resolve().as_uri()
 
 brave_env = {"BRAVE_API_KEY": os.getenv("BRAVE_API_KEY")}
 polygon_api_key = os.getenv("POLYGON_API_KEY")
@@ -41,6 +53,6 @@ def researcher_mcp_server_params(name: str):
         {
             "command": "npx",
             "args": ["-y", "mcp-memory-libsql"],
-            "env": {"LIBSQL_URL": f"file:./memory/{name}.db"},
+            "env": {"LIBSQL_URL": _libsql_memory_url(name)},
         },
     ]
