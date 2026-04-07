@@ -118,7 +118,7 @@ class TraderView:
                     label="Holdings",
                     headers=["Symbol", "Quantity"],
                     row_count=(5, "dynamic"),
-                    col_count=2,
+                    column_count=2,
                     max_height=300,
                     elem_classes=["dataframe-fix-small"],
                 )
@@ -128,7 +128,7 @@ class TraderView:
                     label="Recent Transactions",
                     headers=["Timestamp", "Symbol", "Quantity", "Price", "Rationale"],
                     row_count=(5, "dynamic"),
-                    col_count=5,
+                    column_count=5,
                     max_height=300,
                     elem_classes=["dataframe-fix"],
                 )
@@ -175,9 +175,7 @@ def create_ui():
     ]
     trader_views = [TraderView(trader) for trader in traders]
 
-    with gr.Blocks(
-        title="Traders", css=css, js=js, theme=gr.themes.Default(primary_hue="sky"), fill_width=True
-    ) as ui:
+    with gr.Blocks(title="Traders", fill_width=True) as ui:
         with gr.Row():
             for trader_view in trader_views:
                 trader_view.make_ui()
@@ -187,4 +185,9 @@ def create_ui():
 
 if __name__ == "__main__":
     ui = create_ui()
-    ui.launch(inbrowser=True)
+    ui.launch(
+        inbrowser=True,
+        theme=gr.themes.Default(primary_hue="sky"),
+        css=css,
+        js=js,
+    )
